@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
   let!(:user) { create(:user) }
-  let (:user_id) { user.id }
+  let(:user_id) { user.id }
 
   before { host! 'api.task-manager.test' }
 
@@ -63,6 +63,40 @@ RSpec.describe 'Users API', type: :request do
         expect(user_response).to have_key(:errors)
       end
     end
+  end
+  
+  describe 'PUT /users/:id' do
+    before do
+      headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
+      put "/users/#{user_id}", params: { user: user_params }, headers: headers
+    end
+
+    context 'where the request params are valid' do
+      let(:user_params) { { email: 'new@email.com' } }
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'return jason data for the update user' do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:email]).to eq(user_params[:email])
+      end
+    end
+
+    context 'where the request params are`t valid' do
+      let(:user_params) { attributes_for(:user, email: 'invalid') }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'return jason data for the created user' do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response).to have_key(:errors)
+      end
+    end
+    
   end
   
 
