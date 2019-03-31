@@ -3,8 +3,8 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     begin
-      @user = User.find(params[:id])
-      respond_with @user
+      user = User.find(params[:id])
+      respond_with user
     rescue => exception
       head 404
     end
@@ -28,8 +28,13 @@ class Api::V1::UsersController < ApplicationController
     render json: { errors: user.errors }, status: 422
     end
   end
-  
 
+  def destroy
+    user = User.find(params[:id])
+    user.destroy
+    head 204
+  end
+  
   private
 
   def user_params
