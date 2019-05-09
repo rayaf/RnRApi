@@ -9,4 +9,10 @@ class User < ApplicationRecord
     "#{email} - #{created_at} - token: #{Devise.friendly_token}"
   end
 
+  def generate_auth_token!
+    begin
+      self.auth_token = Devise.friendly_token
+    end while User.exists?(auth_token: auth_token)
+  end
+
 end
