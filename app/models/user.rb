@@ -6,7 +6,7 @@ class User < ApplicationRecord
   validates_uniqueness_of :auth_token
 
   def info
-    "#{email} - #{created_at}"
+    "#{email} - #{created_at} - token: #{Devise.friendly_token}"
   end
 
 end

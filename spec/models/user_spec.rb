@@ -10,10 +10,11 @@ RSpec.describe User, type: :model do
   it { is_expected.to validate_uniqueness_of(:auth_token) }
 
   describe '#info' do
-    it 'return email and created_at' do
+    it 'return email, created_at and a token' do
       user.save!
+      allow(Devise).to receive(:friendly_token).and_return('abcd1234')
 
-      expect(user.info).to eq("#{user.email} - #{user.created_at}") 
+      expect(user.info).to eq("#{user.email} - #{user.created_at} - token: #{Devise.friendly_token}") 
     end
   end
 
