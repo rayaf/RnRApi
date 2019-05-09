@@ -1,5 +1,6 @@
 class Api::V1::SessionsController < ApplicationController
-		def create
+		
+	def create
 			user = User.find_by(email: session_params[:email])
 
 			if user && user.valid_password?(session_params[:password])
@@ -11,6 +12,14 @@ class Api::V1::SessionsController < ApplicationController
 				render json: { errors: 'Email ou senha invalido'}, status: 401
 			end
 		end
+
+		def destroy
+			user = User.find_by(auth_token: params[:id])
+			user.generate_auth_token!
+			user.save
+			head 204
+		end
+		
 
 		private
 
