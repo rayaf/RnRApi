@@ -22,7 +22,7 @@ RSpec.describe 'Tasks API', type: :request do
     end
 
     it 'returns 5 taks from databases' do
-      expect(json_body[:tasks].count).to eq(5)
+      expect(json_body[:data].count).to eq(5)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe 'Tasks API', type: :request do
     end
 
     it 'returns the json for task' do
-      expect(json_body[:title]).to eq(task.title)
+      expect(json_body[:data][:attributes][:title]).to eq(task.title)
     end
   end
 
@@ -56,11 +56,11 @@ RSpec.describe 'Tasks API', type: :request do
       end
 
       it 'return jason data for the created task' do
-        expect(json_body[:title]).to eq(task_pararams[:title])
+        expect(json_body[:data][:attributes][:title]).to eq(task_pararams[:title])
       end
 
       it 'assings the created task to the current user' do
-        expect(json_body[:user_id]).to eq(user.id)
+        expect(json_body[:data][:attributes][:'user-id']).to eq(user.id)
       end
     end
 
@@ -94,7 +94,7 @@ RSpec.describe 'Tasks API', type: :request do
       end
 
       it 'return jason data for the updated task' do
-        expect(json_body[:title]).to eq(task_pararams[:title])
+        expect(json_body[:data][:attributes][:title]).to eq(task_pararams[:title])
       end
 
       it 'update task in the database' do
