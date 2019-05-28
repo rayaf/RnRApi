@@ -11,18 +11,36 @@ RSpec.describe 'Tasks API', type: :request do
      }    
   end
 
-  describe 'Get /tasks' do
-    before do
-      create_list(:task, 5, user_id: user.id)
-      get '/tasks', params: {}, headers: headers
+  describe 'GET /tasks' do
+    context 'when no filter params is sent' do 
+      before do
+        create_list(:task, 5, user_id: user.id)
+        get '/tasks', params: {}, headers: headers
+      end
+
+      it 'return status 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns 5 taks from databases' do
+        expect(json_body[:data].count).to eq(5)
+      end
     end
 
-    it 'return status 200' do
-      expect(response).to have_http_status(200)
-    end
+    context 'when no filter params is sent' do
+      let!(:laptop_task_1){ create(:task, title: 'check is the laptop is broken', user_id: user.id)}
+      let!(:laptop_task_2){ create(:task, title: 'buy a new laptop', user_id: user.id)}
+      let!(:other_task_1){ create(:task, title: 'fix the door', user_id: user.id)}
+      let!(:other_task_2){ create(:task, title: 'buy a new sofa', user_id: user.id)}
 
-    it 'returns 5 taks from databases' do
-      expect(json_body[:data].count).to eq(5)
+      before do
+        get '/tasks?q[title_cont]=laptop', params: {}, headers: headers
+      end
+
+      it 'returns only the tasks matching' do
+        returned_tasks_title = json_body[:data].map { |t| t[:attributes][:title]}
+        expect(returned_tasks_title).to eq([laptop_task_1.title, laptop_task_2.title])
+      end
     end
   end
 
