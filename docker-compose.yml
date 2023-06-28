@@ -1,0 +1,26 @@
+version: '3.6'
+
+services:
+  web:
+    build: ./
+    ports: 
+      - '3000:3000'
+    volumes: 
+      - ./:/var/www/
+    working_dir: /var/www/
+    networks:
+      - ruby
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: "task-manager-api"
+      POSTGRES_PASSWORD: "postgresql"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data 
+    networks:
+      - ruby
+networks: 
+  ruby:
+    driver: bridge

@@ -10,12 +10,13 @@
 #   http://dev.mysql.com/doc/refman/5.7/en/old-client.html
 #
 default: &default
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
+  host: localhost
   pool: 5
-  username: root
-  password: 123
-  socket: /var/run/mysqld/mysqld.sock
+  username: task-manager-api
+  password: postgresql
+  port: 5432
 
 development:
   <<: *default
